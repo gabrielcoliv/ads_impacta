@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cliente</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;  /* Espaçamento entre os campos */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastro de Cliente</h1>
+    
+    <form id="formCliente">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" required>
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone">
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email">
+
+        <button type="submit">Cadastrar Cliente</button>
+    </form>
+
+    <script>
+        $('#formCliente').submit(function (event) {
+            event.preventDefault();
+
+            const clienteData = {
+                nome: $('#nome').val(),
+                cpf: $('#cpf').val(),
+                telefone: $('#telefone').val(),
+                email: $('#email').val()
+            };
+
+            $.ajax({
+                url: '/cliente',  // A URL correta para o método POST
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(clienteData),  // Envia os dados como JSON
+                success: function (data) {
+                    alert(data.mensagem);  // Exibe a mensagem de sucesso
+                    $('#formCliente')[0].reset();  // Limpa o formulário
+                    window.location.href = '/clientes';  // Redireciona para a página de clientes
+                },
+                error: function (xhr, status, error) {
+                    // Exibe erro, se houver
+                    alert('Erro ao cadastrar cliente: ' + xhr.responseJSON.erro);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

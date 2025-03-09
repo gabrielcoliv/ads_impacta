@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Fornecedor</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;  /* Espaçamento entre os campos */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastro de Fornecedor</h1>
+    
+    <form id="formFornecedor">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="cnpj">CNPJ:</label>
+        <input type="text" id="cnpj" name="cnpj" required>
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+
+        <button type="submit">Cadastrar Fornecedor</button>
+    </form>
+
+    <script>
+        // Função para cadastrar o fornecedor
+        $('#formFornecedor').on('submit', function(event) {
+            event.preventDefault(); // Impede o envio tradicional do formulário
+
+            var nome = $('#nome').val();
+            var cnpj = $('#cnpj').val();
+            var telefone = $('#telefone').val();
+            var email = $('#email').val();
+
+            $.ajax({
+                url: '/fornecedor',  // URL para cadastrar o fornecedor
+                type: 'POST',
+                contentType: 'application/json',  // Especifica que o corpo da requisição é JSON
+                data: JSON.stringify({
+                    nome: nome,
+                    cnpj: cnpj,
+                    telefone: telefone,
+                    email: email
+                }),
+                success: function(response) {
+                    alert(response.mensagem);  // Exibe a mensagem de sucesso
+                    window.location.href = '/fornecedores';  // Redireciona para a página de fornecedores
+                },
+                error: function(xhr, status, error) {
+                    alert("Erro ao cadastrar fornecedor: " + xhr.responseText);  // Exibe mensagem de erro
+                }
+            });
+        });
+    </script>
+</body>
+</html>

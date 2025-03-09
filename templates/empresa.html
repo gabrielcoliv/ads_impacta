@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Empresa</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;  /* Aumenta o espaçamento entre os campos */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastro de Empresa</h1>
+
+    <!-- Formulário para cadastro de empresa -->
+    <form id="form-empresa">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" placeholder="Nome" required>
+
+        <label for="cnpj">CNPJ:</label>
+        <input type="text" id="cnpj" name="cnpj" placeholder="CNPJ" required>
+
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco" name="endereco" placeholder="Endereço">
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone" placeholder="Telefone">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="E-mail">
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <script>
+        // Função para cadastrar a empresa
+        $('#form-empresa').on('submit', function(event) {
+            event.preventDefault();
+
+            var nome = $('#nome').val();
+            var cnpj = $('#cnpj').val();
+            var endereco = $('#endereco').val();
+            var telefone = $('#telefone').val();
+            var email = $('#email').val();
+
+            $.ajax({
+                url: '/empresa',  // URL para cadastrar a empresa
+                type: 'POST',
+                contentType: 'application/json',  // Especifica que o corpo da requisição é JSON
+                data: JSON.stringify({
+                    nome: nome,
+                    cnpj: cnpj,
+                    endereco: endereco,
+                    telefone: telefone,
+                    email: email
+                }),
+                success: function(response) {
+                    alert(response.mensagem);  // Exibe a mensagem de sucesso
+                    $('#form-empresa')[0].reset();  // Limpa o formulário
+
+                    // Redireciona para a página empresas.html após o cadastro
+                    window.location.href = '/empresas';  // Redireciona para a página de empresas
+                },
+                error: function(xhr, status, error) {
+                    alert("Erro ao cadastrar empresa: " + xhr.responseText);  // Exibe mensagem de erro
+                }
+            });
+        });
+    </script>
+</body>
+</html>
