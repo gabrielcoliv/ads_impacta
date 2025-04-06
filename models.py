@@ -17,8 +17,7 @@ class Fornecedor(db.Model):
     cnpj = db.Column(db.String(14), unique=True, nullable=False)
     telefone = db.Column(db.String(15))
     email = db.Column(db.String(255), unique=True)
-    
-    # Defina o relacionamento na classe Fornecedor
+
     produtos = db.relationship('Produto', backref='fornecedor', lazy='joined')
 
 class Produto(db.Model):
@@ -27,8 +26,7 @@ class Produto(db.Model):
     descricao = db.Column(db.Text)
     preco = db.Column(db.Numeric(10, 2), nullable=False)
     estoque = db.Column(db.Integer, default=0)
-    
-    # Chave estrangeira para Fornecedor
+
     fornecedor_id = db.Column(db.Integer, db.ForeignKey('fornecedor.id'))
 
 class Cliente(db.Model):
@@ -37,3 +35,29 @@ class Cliente(db.Model):
     cpf = db.Column(db.String(11), unique=True, nullable=False)
     telefone = db.Column(db.String(15))
     email = db.Column(db.String(255), unique=True)
+
+# ---------- Tabelas para Nota Fiscal ----------
+
+class NotaFiscalCompra(db.Model):
+    __tablename__ = 'compras_notas_fiscais'
+
+    id = db.Column(db.Integer, primary_key=True)
+    numero = db.Column(db.String(20), nullable=False)
+    serie = db.Column(db.String(10))
+    data_emissao = db.Column(db.Date, nullable=False)
+    fornecedor_id = db.Column(db.Integer, db.ForeignKey('fornecedor.id'), nullable=False)
+    valor_total = db.Column(db.Numeric(10, 2), nullable=False)
+
+    fornecedor = db.relationship('Fornecedor')
+    itens = db.relationship('NotaFiscalItem', backref='nota_fiscal', lazy=True)
+
+class NotaFiscalItem(db.Model):
+    __tablename__ = 'compras_notas_fiscais_itens'
+
+    id = db.Column(db.Integer, primary_key=True)
+    nota_fiscal_id = db.Column(db.Integer, db.ForeignKey('compras_notas_fiscais.id'), nullable=False)
+    produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=False)
+    quantidade = db.Column(db.Integer, nullable=False)
+    preco_unitario = db.Column(db.Numeric(10, 2), nullable=False)
+
+    produto = db.relationship('Produto')
