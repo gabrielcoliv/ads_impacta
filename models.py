@@ -61,3 +61,29 @@ class NotaFiscalItem(db.Model):
     preco_unitario = db.Column(db.Numeric(10, 2), nullable=False)
 
     produto = db.relationship('Produto')
+
+# ---------- Tabelas para Nota Fiscal Venda ----------
+
+class NotaFiscalVenda(db.Model):
+    __tablename__ = 'vendas_notas_fiscais'
+
+    id = db.Column(db.Integer, primary_key=True)
+    numero = db.Column(db.String(20), nullable=False)
+    serie = db.Column(db.String(10))
+    data_emissao = db.Column(db.Date, nullable=False)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
+    valor_total = db.Column(db.Numeric(10, 2), nullable=False)
+
+    cliente = db.relationship('Cliente')
+    itens = db.relationship('NotaFiscalVendaItem', backref='nota_fiscal', lazy=True)
+
+class NotaFiscalVendaItem(db.Model):
+    __tablename__ = 'vendas_notas_fiscais_itens'
+
+    id = db.Column(db.Integer, primary_key=True)
+    nota_fiscal_id = db.Column(db.Integer, db.ForeignKey('vendas_notas_fiscais.id'), nullable=False)
+    produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=False)
+    quantidade = db.Column(db.Integer, nullable=False)
+    preco_unitario = db.Column(db.Numeric(10, 2), nullable=False)
+
+    produto = db.relationship('Produto')

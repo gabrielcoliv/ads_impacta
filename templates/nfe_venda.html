@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lançar Nota Fiscal de venda</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script defer src="/static/js/nfe_venda.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+
+    fieldset {
+      border: none;
+      margin-bottom: 20px;
+    }
+
+    legend {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #addItem {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    #addItem:hover {
+      background-color: #45a049;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lançar Nota Fiscal de venda</h1>
+
+  <form id="formNotaFiscal">
+    <fieldset>
+      <legend>Dados da Nota</legend>
+      <label for="numero">Número:</label>
+      <input type="text" id="numero" name="numero" required>
+
+      <label for="serie">Série:</label>
+      <input type="text" id="serie" name="serie">
+
+      <label for="data_emissao">Data de Emissão:</label>
+      <input type="date" id="data_emissao" name="data_emissao" required>
+
+      <label for="cliente_id">cliente:</label>
+      <select id="cliente_id" name="cliente_id" required></select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Itens da Nota</legend>
+      <table id="itensTable">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Valor Unitário</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button type="button" id="addItem">➕ Adicionar Item</button>
+    </fieldset>
+
+    <fieldset>
+      <label for="valor_total">Valor Total:</label>
+      <input type="text" id="valor_total" name="valor_total" readonly>
+    </fieldset>
+
+    <button type="submit">Salvar Nota</button>
+  </form>
+</body>
+</html>

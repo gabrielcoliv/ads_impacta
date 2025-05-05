@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from config import SQLALCHEMY_DATABASE_URI
-from models import db, Empresa, Fornecedor, Produto, Cliente, NotaFiscalCompra, NotaFiscalItem
+from models import db, Empresa, Fornecedor, Produto, Cliente, NotaFiscalCompra, NotaFiscalItem, NotaFiscalVenda, NotaFiscalVendaItem
 from sqlalchemy.orm import joinedload
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
@@ -171,6 +171,45 @@ def nota_fiscal_compra():
 def nfe_lista():
     notas = NotaFiscalCompra.query.order_by(NotaFiscalCompra.data_emissao.desc()).all()
     return render_template('nfe_lista.html', notas=notas)
+
+@app.route('/nota_fiscal_venda', methods=['GET', 'POST'])
+def nota_fiscal_venda():
+    if request.method == 'POST':
+        data = request.get_json()
+
+        nota = NotaFiscalVenda(
+            numero=data['numero'],
+            serie=data['serie'],
+            data_emissao=data['data_emissao'],
+            cliente_id=data['cliente_id'],
+            valor_total=data['valor_total']
+        )
+        db.session.add(nota)
+        db.session.flush()  # Para obter o ID da nota antes do commit
+
+        for item in data['itens']:
+            novo_item = NotaFiscalVendaItem(
+                nota_fiscal_id=nota.id,
+                produto_id=item['produto_id'],
+                quantidade=item['quantidade'],
+                preco_unitario=item['preco_unitario']  # <-- nome correto do campo
+            )
+            db.session.add(novo_item)
+
+        db.session.commit()
+        return jsonify({"mensagem": "Nota fiscal salva com sucesso!"}), 201
+
+    return render_template('nfe_venda.html')
+
+@app.route('/nfe_lista_venda')
+def nfe_lista_venda():
+    notas = NotaFiscalVenda.query.order_by(NotaFiscalVenda.data_emissao.desc()).all()
+    return render_template('nfe_lista_venda.html', notas=notas)
+
+@app.route('/clientes_json', methods=['GET'])
+def clientes_json():
+    clientes = Fornecedor.query.with_entities(Cliente.id, Cliente.nome).all()
+    return jsonify([{"id": f.id, "nome": f.nome} for f in clientes])
 
 if __name__ == '__main__':
     app.run(debug=True)
