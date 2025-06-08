@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Estoque de Produtos</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .table-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 1.1em;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #e0e0e0;
+    }
+
+    td {
+      font-size: 1em;
+      color: #333;
+    }
+
+    .no-data {
+      text-align: center;
+      font-size: 1.2em;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sistema ERP</h1>
+  </header>
+
+  <div class="container">
+    <h1>Estoque de Produtos</h1>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Descrição</th>
+            <th>Quantidade em Estoque</th>
+          </tr>
+        </thead>
+<tbody>
+{% for produto in estoque %}
+<tr>
+  <td>{{ produto.nome }}</td>
+  <td>{{ produto.descricao }}</td>
+  <td>{{ produto.quantidade_estoque }}</td>
+</tr>
+{% else %}
+<tr>
+  <td colspan="3" class="no-data">Nenhum produto em estoque.</td>
+</tr>
+{% endfor %}
+</tbody>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,7 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-# Criar o objeto db
-db = SQLAlchemy()
+from extensions import db
 
 class Empresa(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,7 +22,6 @@ class Produto(db.Model):
     nome = db.Column(db.String(255), nullable=False)
     descricao = db.Column(db.Text)
     preco = db.Column(db.Numeric(10, 2), nullable=False)
-    estoque = db.Column(db.Integer, default=0)
 
     fornecedor_id = db.Column(db.Integer, db.ForeignKey('fornecedor.id'))
 
@@ -36,7 +32,18 @@ class Cliente(db.Model):
     telefone = db.Column(db.String(15))
     email = db.Column(db.String(255), unique=True)
 
-# ---------- Tabelas para Nota Fiscal ----------
+# ---------- Estoque ----------
+
+class Estoque(db.Model):
+    __tablename__ = 'estoque'
+
+    id = db.Column(db.Integer, primary_key=True)
+    produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=False, unique=True)
+    quantidade = db.Column(db.Integer, nullable=False, default=0)
+
+    produto = db.relationship('Produto', backref=db.backref('estoque', uselist=False))
+
+# ---------- Notas Fiscais Compra ----------
 
 class NotaFiscalCompra(db.Model):
     __tablename__ = 'compras_notas_fiscais'
@@ -62,7 +69,7 @@ class NotaFiscalItem(db.Model):
 
     produto = db.relationship('Produto')
 
-# ---------- Tabelas para Nota Fiscal Venda ----------
+# ---------- Notas Fiscais Venda ----------
 
 class NotaFiscalVenda(db.Model):
     __tablename__ = 'vendas_notas_fiscais'
